@@ -1,2 +1,3 @@
+from .match import Match, match, ExhaustiveError
 
-__version__ = "0.1.0"
+__all__ = ["Match", "match", "ExhaustiveError"]
