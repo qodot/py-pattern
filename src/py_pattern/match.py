@@ -1,22 +1,23 @@
 from __future__ import annotations
-from typing import Generic, TypeVar, Callable, Any
+
+from typing import Generic, TypeVar, Any
 
 V = TypeVar("V")  # type of match(value)
-P = TypeVar("P")  # type of when(pattern)
-UP = TypeVar("UP")  # unionized pattern type of when(pattern)
-R = TypeVar("R")  # return type of when(then)
-UR = TypeVar("UR")  # unionized return type of when(then)
+P = TypeVar("P")  # type of case(pattern)
+UP = TypeVar("UP")  # unionized pattern type of case(pattern)
+R = TypeVar("R")  # return type of case(then)
+UR = TypeVar("UR")  # unionized return type of case(then)
 
 
 class Match(Generic[V]):
     def __init__(self, value: V) -> None:
         self.value = value
 
-    def when(
+    def case(
         self,
         pattern: P,
         then: R,
-    ) -> When[V, P, R]:
+    ) -> Case[V, P, R]:
         if isinstance(pattern, type):
             # 타입 매칭
             matched = isinstance(self.value, pattern)
@@ -24,20 +25,20 @@ class Match(Generic[V]):
             # 값 매칭 (리터럴)
             matched = self.value == pattern
 
-        return When(self.value, then, matched)
+        return Case(self.value, then, matched)
 
 
-class When(Generic[V, P, R]):
+class Case(Generic[V, P, R]):
     def __init__(self, value: V, result: R, matched: bool) -> None:
         self.value = value
         self.result = result
         self.matched = matched
 
-    def when(
+    def case(
         self,
         pattern: UP,
         then: UR,
-    ) -> When[V, P | UP, R | UR]:
+    ) -> Case[V, P | UP, R | UR]:
         if self.matched:
             return self  # type: ignore
 
@@ -48,7 +49,7 @@ class When(Generic[V, P, R]):
         else:
             matched = self.value == pattern
 
-        return When(self.value, then, matched)
+        return Case(self.value, then, matched)
 
     def exhaustive(self) -> R:
         if not self.matched:

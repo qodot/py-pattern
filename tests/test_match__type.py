@@ -1,6 +1,6 @@
 import pytest
 
-from match_expression import match, ExhaustiveError
+from py_pattern import match, ExhaustiveError
 
 
 class Animal:
@@ -42,9 +42,9 @@ class Bird(Animal):
 def test__valid_type(value: Animal, expected: str) -> None:
     result = (
         match(value)
-        .when(Dog, "Buddy barks!")
-        .when(Cat, "Whiskers meows!")
-        .when(Bird, "Tweety chirps!")
+        .case(Dog, "Buddy barks!")
+        .case(Cat, "Whiskers meows!")
+        .case(Bird, "Tweety chirps!")
         .exhaustive()
     )
 
@@ -55,7 +55,7 @@ def test__exhaustive__raises_error() -> None:
     cat = Cat("Whiskers")
 
     with pytest.raises(ExhaustiveError) as exc_info:
-        match(cat).when(Dog, "Dog: Buddy").when(Bird, "Bird: Tweety").exhaustive()
+        match(cat).case(Dog, "Dog: Buddy").case(Bird, "Bird: Tweety").exhaustive()
 
     assert isinstance(exc_info.value.value, Cat)
 
@@ -64,7 +64,7 @@ def test__otherwise():
     cat = Cat("Whiskers")
 
     result = (
-        match(cat).when(Dog, "Dog: Buddy").when(Bird, "Bird: Tweety").otherwise("Other")
+        match(cat).case(Dog, "Dog: Buddy").case(Bird, "Bird: Tweety").otherwise("Other")
     )
 
     assert result == "Other"
