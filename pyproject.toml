@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "match-expression"
-version = "0.1.1"
+version = "0.1.2"
 description = "A Python implementation of TypeScript's ts-pattern, type-safe pattern matching with an expressive API"
 readme = "README.md"
 urls = { "Homepage" = "https://github.com/qodot/match-expression", "Bug Tracker" = "https://github.com/qodot/match-expression/issues", "Repository" = "https://github.com/qodot/match-expression" }
@@ -49,4 +49,17 @@ exclude_lines = [
     "raise NotImplementedError",
     "pass",
     "except ImportError:",
+]
+
+[tool.hatch.build]
+exclude = [
+    ".git/",
+    ".gitignore",
+    ".vscode/",
+    ".envrc",
+    "__pycache__/",
+    "*.py[cod]",
+    ".uv/",
+    "uv.lock",
+    "CLAUDE.md",
 ]
