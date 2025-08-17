@@ -8,7 +8,7 @@ A Python implementation of TypeScript's [ts-pattern](https://github.com/gvergnau
 - **Type-safe**: Full type inference support with pyright/mypy
 - **Exhaustiveness checking**: Ensures all cases are handled at compile time
 - **Zero dependencies**: Lightweight and fast
-- **Pythonic**: Leverages Python 3.10+ type system features
+- **Pythonic**: Leverages Python 3.12+ type system features
 
 ## Installation
 
@@ -182,7 +182,7 @@ uv run pyright src/ tests/
 
 ## Requirements
 
-- Python 3.10 or higher
+- Python 3.12 or higher
 - No external dependencies
 
 ## License
