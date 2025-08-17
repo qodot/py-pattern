@@ -1,3 +1,3 @@
-from .match import Match, match, ExhaustiveError
+from .match import match, ExhaustiveError
 
-__all__ = ["Match", "match", "ExhaustiveError"]
+__all__ = ["match", "ExhaustiveError"]

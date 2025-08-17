@@ -1,25 +1,18 @@
 from __future__ import annotations
 
 import inspect
-from typing import Generic, TypeVar, Any, Callable
+from typing import Any, Callable
 
 PRIMITIVE_TYPES = (int, float, str, bool, bytes, type(None))
 COLLECTION_TYPES = (list, tuple, dict, set, frozenset)
 BUILTIN_TYPES = PRIMITIVE_TYPES + COLLECTION_TYPES
 
 
-V = TypeVar("V")  # type of match(value)
-P = TypeVar("P")  # type of case(pattern)
-R = TypeVar("R")  # return type of case(then)
-UP = TypeVar("UP")  # unionized pattern type of case(pattern)
-UR = TypeVar("UR")  # unionized return type of case(then)
-
-
-class Match(Generic[V]):
+class Match[V]:
     def __init__(self, value: V) -> None:
         self.value = value
 
-    def case(
+    def case[P, R](
         self,
         pattern: P | type[P],
         then: R | Callable[[P], R] | Callable[[], R],
@@ -43,13 +36,13 @@ class Match(Generic[V]):
         return Case(self.value, result, matched)  # type: ignore
 
 
-class Case(Generic[V, P, R]):
+class Case[V, P, R]:
     def __init__(self, value: V, result: R, matched: bool) -> None:
         self.value = value
         self.result = result
         self.matched = matched
 
-    def case(
+    def case[UP, UR](
         self,
         pattern: UP | type[UP],
         then: UR | Callable[[UP], UR] | Callable[[], UR],
@@ -80,7 +73,7 @@ class Case(Generic[V, P, R]):
             raise ExhaustiveError(self.value)
         return self.result
 
-    def otherwise(self, default: UR | Callable[[], UR]) -> R | UR:
+    def otherwise[UR](self, default: UR | Callable[[], UR]) -> R | UR:
         if self.matched:
             return self.result
         if callable(default):
@@ -88,11 +81,11 @@ class Case(Generic[V, P, R]):
         return default
 
 
-def match(value: V) -> Match[V]:
+def match[V](value: V) -> Match[V]:
     return Match[V](value)
 
 
-def _unwrap(value: V, then: R | Callable[[V], R] | Callable[[], R]) -> R:
+def _unwrap[V, R](value: V, then: R | Callable[[V], R] | Callable[[], R]) -> R:
     if not callable(then):
         return then
 
