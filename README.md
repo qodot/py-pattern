@@ -185,6 +185,5 @@ uv run pyright src/ tests/
 - Python 3.12 or higher
 - No external dependencies
 
-## License
-
-MIT License - see LICENSE file for details
+## Special Thanks
+- [@code-yeongyu](https://github.com/code-yeongyu) and [@indentcorp](https://github.com/indentcorp)
