@@ -126,6 +126,34 @@ def process(value: int | str) -> int | str:
     # Type is inferred as: int | str
 ```
 
+### Delayed Evaluation with `eval=False`
+
+You can defer the evaluation of callable functions by using `eval=False`:
+
+```python
+from py_pattern import match
+from typing import Callable
+
+def get_handler(command: str) -> Callable[[], str]:
+    return (
+        match(command)
+        .case("start", lambda: "Starting application...")
+        .case("stop", lambda: "Stopping application...")
+        .case("restart", lambda: "Restarting application...")
+        .exhaustive(eval=False)  # Returns the lambda without calling it
+    )
+
+# Get the handler function without executing it
+handler = get_handler("start")
+# Execute later when needed
+result = handler()  # "Starting application..."
+```
+
+This is useful when you want to:
+- Return handler functions for later execution
+- Implement lazy evaluation patterns
+- Build command dispatch systems
+
 ## API Reference
 
 ### `match(value: V) -> Match[V]`
@@ -137,11 +165,16 @@ Matches against a pattern. If the pattern matches, executes `then`.
 - `pattern`: A value to match against (for literals) or a type (for isinstance checks)
 - `then`: The value to return or a function to execute with the matched value
 
-### `.exhaustive() -> R`
+### `.exhaustive(eval: bool = True) -> R`
 Ensures all cases are handled. Raises `ExhaustiveError` if not all cases are covered.
 
-### `.otherwise(default: R) -> R`
+- `eval`: When `True` (default), evaluates callable functions. When `False`, returns the callable without evaluating it.
+
+### `.otherwise(default: R, eval: bool = True) -> R`
 Provides a default value for unmatched cases.
+
+- `default`: The value to return or a function to execute when no patterns match
+- `eval`: When `True` (default), evaluates callable functions. When `False`, returns the callable without evaluating it.
 
 ## Type Checking
 

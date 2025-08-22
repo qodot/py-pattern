@@ -90,3 +90,34 @@ def test_type_match__returns_class_without_instantiation() -> None:
     
     assert result is DogHandler
     assert not isinstance(result, DogHandler)
+
+
+def test_type_match__no_eval_exhaustive() -> None:
+    dog = Dog("Buddy")
+    
+    result = (
+        match(dog)
+        .case(Dog, lambda d: d.speak())
+        .case(Cat, lambda c: c.speak())
+        .case(Bird, lambda b: b.speak())
+        .exhaustive(eval=False)
+    )
+    
+    # Should return the lambda function itself, not its result
+    assert callable(result)
+    assert result(dog) == "Buddy barks!"
+
+
+def test_type_match__no_eval_otherwise() -> None:
+    cat = Cat("Whiskers")
+    
+    result = (
+        match(cat)
+        .case(Dog, lambda d: d.speak())
+        .case(Bird, lambda b: b.speak())
+        .otherwise(lambda: "Unknown animal", eval=False)
+    )
+    
+    # Should return the default lambda function itself
+    assert callable(result)
+    assert result() == "Unknown animal"

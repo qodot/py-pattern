@@ -62,15 +62,21 @@ class Case[V, P, R]:
 
         return Case(self.value, then, matched)  # type: ignore
 
-    def exhaustive(self) -> R:
+    def exhaustive(self, eval: bool = True) -> R:
         if not self.matched:
             raise ExhaustiveError(self.value)
-        return _unwrap(self.value, self.then)
-
-    def otherwise[UR](self, default: UR | Callable[[], UR]) -> R | UR:
-        if self.matched:
+        if eval:
             return _unwrap(self.value, self.then)
-        if callable(default):
+        else:
+            return self.then  # type: ignore
+
+    def otherwise[UR](self, default: UR | Callable[[], UR], eval: bool = True) -> R | UR:
+        if self.matched:
+            if eval:
+                return _unwrap(self.value, self.then)
+            else:
+                return self.then  # type: ignore
+        if eval and callable(default):
             return default()  # type: ignore
         return default
 
