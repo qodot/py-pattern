@@ -22,14 +22,14 @@ class Match[V]:
             result = _unwrap(self.value, then)
         else:
             if type(pattern) in PRIMITIVE_TYPES:
-                # 원시 타입 매칭
+                # Primitive type matching
                 matched = self.value == pattern
                 result = _unwrap(self.value, then)
             elif type(pattern) in COLLECTION_TYPES:
-                # 컬렉션 타입 매칭
+                # Collection type matching
                 result = _unwrap(self.value, then)
             else:
-                # 커스텀 타입 매칭
+                # Custom type matching
                 matched = type(pattern) is type(self.value)
                 result = _unwrap(self.value, then)
 
@@ -55,14 +55,14 @@ class Case[V, P, R]:
             result = _unwrap(self.value, then)
         else:
             if type(pattern) in PRIMITIVE_TYPES:
-                # 원시 타입 매칭
+                # Primitive type matching
                 matched = self.value == pattern
                 result = _unwrap(self.value, then)
             elif type(pattern) in COLLECTION_TYPES:
-                # 컬렉션 타입 매칭
+                # Collection type matching
                 result = _unwrap(self.value, then)
             else:
-                # 커스텀 타입 매칭
+                # Custom type matching
                 matched = type(pattern) is type(self.value)
                 result = _unwrap(self.value, then)
 
@@ -89,11 +89,11 @@ def _unwrap[V, R](value: V, then: R | Callable[[V], R] | Callable[[], R]) -> R:
     if not callable(then):
         return then
 
-    # 클래스인 경우 (생성자 호출 방지)
+    # For classes (prevent constructor invocation)
     if inspect.isclass(then):
         return then  # type: ignore
     
-    # 함수나 메서드인 경우에만 호출
+    # Only call for functions or methods
     sig = inspect.signature(then)
     if len(sig.parameters) == 0:
         return then()  # type: ignore
