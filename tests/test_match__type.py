@@ -69,3 +69,24 @@ def test__otherwise():
 
     assert_type(result, str)
     assert result == "Other"
+
+
+def test_type_match__returns_class_without_instantiation() -> None:
+    dog = Dog("Buddy")
+    
+    class DogHandler: ...
+    
+    class CatHandler: ...
+    
+    class BirdHandler: ...
+    
+    result = (
+        match(dog)
+        .case(Dog, DogHandler)
+        .case(Cat, CatHandler)
+        .case(Bird, BirdHandler)
+        .exhaustive()
+    )
+    
+    assert result is DogHandler
+    assert not isinstance(result, DogHandler)

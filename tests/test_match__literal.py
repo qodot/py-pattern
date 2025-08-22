@@ -56,3 +56,18 @@ def test_literal_match_with_otherwise() -> None:
 
     assert_type(result, str)
     assert result == "Other"
+
+
+def test_literal_match__returns_class_without_instantiation() -> None:
+    platform: Platform = "instagram"
+    
+    result = (
+        match(platform)
+        .case("instagram", InstagramManager) 
+        .case("tiktok", TiktokManager)
+        .case("youtube", YoutubeManager)
+        .exhaustive()
+    )
+    
+    assert result is InstagramManager
+    assert not isinstance(result, InstagramManager)  

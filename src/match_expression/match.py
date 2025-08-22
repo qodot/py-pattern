@@ -89,6 +89,11 @@ def _unwrap[V, R](value: V, then: R | Callable[[V], R] | Callable[[], R]) -> R:
     if not callable(then):
         return then
 
+    # 클래스인 경우 (생성자 호출 방지)
+    if inspect.isclass(then):
+        return then  # type: ignore
+    
+    # 함수나 메서드인 경우에만 호출
     sig = inspect.signature(then)
     if len(sig.parameters) == 0:
         return then()  # type: ignore
