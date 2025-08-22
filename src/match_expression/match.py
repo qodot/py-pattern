@@ -19,27 +19,24 @@ class Match[V]:
     ) -> Case[V, P, R]:
         if type(pattern) is type:
             matched = isinstance(self.value, pattern)
-            result = _unwrap(self.value, then)
         else:
             if type(pattern) in PRIMITIVE_TYPES:
                 # Primitive type matching
                 matched = self.value == pattern
-                result = _unwrap(self.value, then)
             elif type(pattern) in COLLECTION_TYPES:
                 # Collection type matching
-                result = _unwrap(self.value, then)
+                matched = False  # TODO: implement collection matching
             else:
                 # Custom type matching
                 matched = type(pattern) is type(self.value)
-                result = _unwrap(self.value, then)
 
-        return Case(self.value, result, matched)  # type: ignore
+        return Case(self.value, then, matched)  # type: ignore
 
 
 class Case[V, P, R]:
-    def __init__(self, value: V, result: R, matched: bool) -> None:
+    def __init__(self, value: V, then: R | Callable[[P], R] | Callable[[], R], matched: bool) -> None:
         self.value = value
-        self.result = result
+        self.then = then
         self.matched = matched
 
     def case[UP, UR](
@@ -52,30 +49,27 @@ class Case[V, P, R]:
 
         if type(pattern) is type:
             matched = isinstance(self.value, pattern)
-            result = _unwrap(self.value, then)
         else:
             if type(pattern) in PRIMITIVE_TYPES:
                 # Primitive type matching
                 matched = self.value == pattern
-                result = _unwrap(self.value, then)
             elif type(pattern) in COLLECTION_TYPES:
                 # Collection type matching
-                result = _unwrap(self.value, then)
+                matched = False  # TODO: implement collection matching
             else:
                 # Custom type matching
                 matched = type(pattern) is type(self.value)
-                result = _unwrap(self.value, then)
 
-        return Case(self.value, result, matched)  # type: ignore
+        return Case(self.value, then, matched)  # type: ignore
 
     def exhaustive(self) -> R:
         if not self.matched:
             raise ExhaustiveError(self.value)
-        return self.result
+        return _unwrap(self.value, self.then)
 
     def otherwise[UR](self, default: UR | Callable[[], UR]) -> R | UR:
         if self.matched:
-            return self.result
+            return _unwrap(self.value, self.then)
         if callable(default):
             return default()  # type: ignore
         return default
