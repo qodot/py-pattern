@@ -20,7 +20,7 @@ pip install match_expression
 
 ```python
 from typing import Literal
-from py_pattern import match
+from match_expression import match
 
 # Literal type matching
 def process_status(status: Literal["pending", "success", "error"]) -> int:
@@ -56,7 +56,7 @@ def handle_animal(animal: Dog | Cat) -> str:
 
 ```python
 from typing import Literal
-from py_pattern import match
+from match_expression import match
 
 type Platform = Literal["web", "mobile", "desktop"]
 
@@ -75,7 +75,7 @@ def get_app_name(platform: Platform) -> str:
 ### Class Type Matching
 
 ```python
-from py_pattern import match
+from match_expression import match
 
 class Success:
     def __init__(self, value: str):
@@ -97,7 +97,7 @@ def handle_result(result: Success | Error) -> str:
 ### Using `otherwise` for Default Cases
 
 ```python
-from py_pattern import match
+from match_expression import match
 
 def classify_number(n: int) -> str:
     return (
@@ -114,7 +114,7 @@ def classify_number(n: int) -> str:
 The library correctly infers union return types:
 
 ```python
-from py_pattern import match
+from match_expression import match
 
 def process(value: int | str) -> int | str:
     return (
@@ -131,7 +131,7 @@ def process(value: int | str) -> int | str:
 You can defer the evaluation of callable functions by using `eval=False`:
 
 ```python
-from py_pattern import match
+from match_expression import match
 from typing import Callable
 
 def get_handler(command: str) -> Callable[[], str]:
