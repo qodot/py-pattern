@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import inspect
+from enum import Enum
 from typing import Any, Callable
 
 PRIMITIVE_TYPES = (int, float, str, bool, bytes, type(None))
@@ -20,7 +21,7 @@ class Match[V]:
         if type(pattern) is type:
             matched = isinstance(self.value, pattern)
         else:
-            if type(pattern) in PRIMITIVE_TYPES:
+            if type(pattern) in PRIMITIVE_TYPES or isinstance(pattern, Enum):
                 # Primitive type matching
                 matched = self.value == pattern
             elif type(pattern) in COLLECTION_TYPES:
@@ -50,7 +51,7 @@ class Case[V, P, R]:
         if type(pattern) is type:
             matched = isinstance(self.value, pattern)
         else:
-            if type(pattern) in PRIMITIVE_TYPES:
+            if type(pattern) in PRIMITIVE_TYPES or isinstance(pattern, Enum):
                 # Primitive type matching
                 matched = self.value == pattern
             elif type(pattern) in COLLECTION_TYPES:
