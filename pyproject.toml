@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "match-expression"
-version = "0.3.0"
+version = "0.3.1"
 description = "A Python implementation of TypeScript's ts-pattern, type-safe pattern matching with an expressive API"
 readme = "README.md"
 urls = { "Homepage" = "https://github.com/qodot/match-expression", "Bug Tracker" = "https://github.com/qodot/match-expression/issues", "Repository" = "https://github.com/qodot/match-expression" }
