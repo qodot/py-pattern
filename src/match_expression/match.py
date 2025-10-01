@@ -35,7 +35,9 @@ class Match[V]:
 
 
 class Case[V, P, R]:
-    def __init__(self, value: V, then: R | Callable[[P], R] | Callable[[], R], matched: bool) -> None:
+    def __init__(
+        self, value: V, then: R | Callable[[P], R] | Callable[[], R], matched: bool
+    ) -> None:
         self.value = value
         self.then = then
         self.matched = matched
@@ -71,7 +73,9 @@ class Case[V, P, R]:
         else:
             return self.then  # type: ignore
 
-    def otherwise[UR](self, default: UR | Callable[[], UR], eval: bool = True) -> R | UR:
+    def otherwise[UR](
+        self, default: UR | Callable[[], UR], eval: bool = True
+    ) -> R | UR:
         if self.matched:
             if eval:
                 return _unwrap(self.value, self.then)
@@ -93,7 +97,7 @@ def _unwrap[V, R](value: V, then: R | Callable[[V], R] | Callable[[], R]) -> R:
     # For classes (prevent constructor invocation)
     if inspect.isclass(then):
         return then  # type: ignore
-    
+
     # Only call for functions or methods
     sig = inspect.signature(then)
     if len(sig.parameters) == 0:
