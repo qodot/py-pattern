@@ -18,7 +18,7 @@ class Match[V]:
         pattern: P | type[P],
         then: R | Callable[[P], R] | Callable[[], R],
     ) -> Case[V, P, R]:
-        if type(pattern) is type:
+        if isinstance(pattern, type):
             matched = isinstance(self.value, pattern)
         else:
             if type(pattern) in PRIMITIVE_TYPES or isinstance(pattern, Enum):
@@ -48,7 +48,7 @@ class Case[V, P, R]:
         if self.matched:
             return self  # type: ignore
 
-        if type(pattern) is type:
+        if isinstance(pattern, type):
             matched = isinstance(self.value, pattern)
         else:
             if type(pattern) in PRIMITIVE_TYPES or isinstance(pattern, Enum):
